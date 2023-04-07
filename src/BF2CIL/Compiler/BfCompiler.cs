@@ -56,16 +56,10 @@ public static class BfCompiler {
         program.Methods.Add(ctor);
 
         var write = module.ImportReference(
-            typeof(Console).GetMethod(
-                "Write",
-                new[] { typeof(char) }
-            )
+            typeof(Console).GetMethod("Write", new[] { typeof(char) })
         );
         var readKey = module.ImportReference(
-            typeof(Console).GetMethod(
-                "ReadKey",
-                new[] { typeof(bool) }
-            )
+            typeof(Console).GetMethod("ReadKey", new[] { typeof(bool) })
         );
         var interceptKey = options.InterceptInput
             ? OpCodes.Ldc_I4_1
