@@ -10,7 +10,7 @@ cd ./bfcil/src/
 dotnet build -c "Release"
 ```
 
-## Usage
+## Compiler Usage
 
 BF2CIL has an exposed public API as well as a private CLI infrastructure which can be accessed through `dotnet BF2CIL.dll` or by running the produced executable directly.
 
@@ -35,3 +35,24 @@ Command parameters and options are documented through the `--help` flag, a brief
 | `--overwrite`               | `-w` | Overwrite output files                                   |
 | `--generate-runtime-config` | `-r` | Generate runtime config                                  |
 | `--intercept-input`         | `-i` | Intercept input (don't display user input when prompted) |
+
+## Decompiler Usage
+
+BF2CIL also has a rudimentary decompiler. It is also exposed through both a public API as well as a private CLI infrastructure accessed through `dotnet BF2CIL.dll decompiler`.
+
+An example of the public API lies within the `Program.cs` file.
+
+Command parameters and options are documented through the `--help` flag, a brief rundown is as follows:
+
+### Parameters
+
+|  Index  |  Name   |   Description   |
+|---------|---------|-----------------|
+|     `0` | `input` | Input file path |
+
+### Options
+
+|      Name     |   C  |       Description      |
+|---------------|------|----------------------------------------------------------|
+| `--output`    | `-o` | Output file path       |
+| `--overwrite` | `-w` | Overwrite output files |
