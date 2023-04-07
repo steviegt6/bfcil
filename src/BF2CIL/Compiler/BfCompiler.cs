@@ -72,6 +72,34 @@ public static class BfCompiler {
         ctorIl.Append(ctorIl.Create(OpCodes.Ret));
         program.Methods.Add(ctor);
 
+        var main = CompileBrainfuck("'<Main>$'", source, options, module);
+
+        program.Methods.Add(main);
+        module.EntryPoint = main;
+
+        using var ms = new MemoryStream();
+        module.Write(ms);
+        return ms.ToArray();
+    }
+
+    /// <summary>
+    ///     Compiles a Brainfuck program to a .NET method.
+    /// </summary>
+    /// <param name="methodName">The name of the method to compile to.</param>
+    /// <param name="source">The Brainfuck program.</param>
+    /// <param name="options">Compilation options.</param>
+    /// <param name="module">
+    ///     The module supplying the type system and various other type utilities.
+    /// </param>
+    /// <returns>The compiled Brainfuck program.</returns>
+    /// <exception cref="Exception"></exception>
+    public static MethodDefinition CompileBrainfuck(
+        string methodName,
+        char[] source,
+        BfCompilerOptions options,
+        ModuleDefinition module
+    ) {
+        var ts = module.TypeSystem;
         var write = module.ImportReference(
             typeof(Console).GetMethod("Write", new[] { typeof(char) })
         );
@@ -86,7 +114,7 @@ public static class BfCompiler {
         );
 
         var main = new MethodDefinition(
-            "'<Main>$'",
+            methodName,
             MethodAttributes.Private
           | MethodAttributes.HideBySig
           | MethodAttributes.Static,
@@ -221,11 +249,6 @@ public static class BfCompiler {
 
         mainIl.Append(mainIl.Create(OpCodes.Ret));
 
-        program.Methods.Add(main);
-        module.EntryPoint = main;
-
-        using var ms = new MemoryStream();
-        module.Write(ms);
-        return ms.ToArray();
+        return main;
     }
 }
