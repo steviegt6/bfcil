@@ -79,9 +79,9 @@ public static class BfDecompiler {
                     // +/-
                     cursor.Index += 4;
                     
-                    if (cursor.Next.OpCode == OpCodes.Sub)
+                    if (cursor.Next.OpCode == OpCodes.Add)
                         program.Add('+');
-                    else if (cursor.Next.OpCode == OpCodes.Add)
+                    else if (cursor.Next.OpCode == OpCodes.Sub)
                         program.Add('-');
                     else
                         throw unexpectedOpcode(cursor);
