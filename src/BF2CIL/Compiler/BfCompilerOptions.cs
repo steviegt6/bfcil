@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace BF2CIL.Compiler; 
+﻿namespace BF2CIL.Compiler;
 
 public class BfCompilerOptions {
     public required string Name { get; set; }
@@ -8,7 +6,7 @@ public class BfCompilerOptions {
     public required string Version { get; set; }
 
     public required int CellCount { get; set; }
-    
+
     public required bool InterceptInput { get; set; }
 
     public static BfCompilerOptions CreateDefault(string name, string version) {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -59,17 +58,13 @@ public static class BfCompiler {
         var write = module.ImportReference(
             typeof(Console).GetMethod(
                 "Write",
-                new[] {
-                    typeof(char),
-                }
+                new[] { typeof(char) }
             )
         );
         var readKey = module.ImportReference(
             typeof(Console).GetMethod(
                 "ReadKey",
-                new[] {
-                    typeof(bool),
-                }
+                new[] { typeof(bool) }
             )
         );
         var interceptKey = options.InterceptInput
