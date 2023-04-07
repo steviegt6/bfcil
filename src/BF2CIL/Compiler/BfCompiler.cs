@@ -7,11 +7,28 @@ using Mono.Cecil.Rocks;
 
 namespace BF2CIL.Compiler;
 
+/// <summary>
+///     Handles the compilation of a Brainfuck program to a .NET assembly.
+/// </summary>
 public static class BfCompiler {
+    /// <summary>
+    ///     Compiles the Brainfuck program <paramref name="source"/> to a .NET
+    ///     assembly.
+    /// </summary>
+    /// <param name="source">The Brainfuck program.</param>
+    /// <param name="options">Compilation options.</param>
+    /// <returns>The compiled .NET assembly, as a byte array,</returns>
     public static byte[] Compile(string source, BfCompilerOptions options) {
         return Compile(source.ToCharArray(), options);
     }
 
+    /// <summary>
+    ///     Compiles the Brainfuck program <paramref name="source"/> to a .NET
+    ///     assembly.
+    /// </summary>
+    /// <param name="source">The Brainfuck program.</param>
+    /// <param name="options">Compilation options.</param>
+    /// <returns>The compiled .NET assembly, as a byte array,</returns>
     public static byte[] Compile(char[] source, BfCompilerOptions options) {
         var name = options.Name;
         var nameDef = new AssemblyNameDefinition(
