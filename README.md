@@ -12,7 +12,7 @@ dotnet build -c "Release"
 
 ## Usage
 
-BF2CIL has an exposed public API as well as a private CLI infrastructure which can be accessed through `dotnet run BF2CIL.dll` or by running the produced executable directly.
+BF2CIL has an exposed public API as well as a private CLI infrastructure which can be accessed through `dotnet BF2CIL.dll` or by running the produced executable directly.
 
 An example of the public API lies within the `Program.cs` file.
 
