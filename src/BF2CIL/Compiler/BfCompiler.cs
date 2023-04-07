@@ -65,8 +65,16 @@ public static class BfCompiler {
             )
         );
         var readKey = module.ImportReference(
-            typeof(Console).GetMethod("ReadKey", Type.EmptyTypes)
+            typeof(Console).GetMethod(
+                "ReadKey",
+                new[] {
+                    typeof(bool),
+                }
+            )
         );
+        var interceptKey = options.InterceptInput
+            ? OpCodes.Ldc_I4_1
+            : OpCodes.Ldc_I4_0;
         var keyChar = module.ImportReference(
             typeof(ConsoleKeyInfo).GetProperty("KeyChar")!.GetMethod
         );
@@ -163,6 +171,7 @@ public static class BfCompiler {
                     // cells[ptr] = Console.ReadKey().KeyChar;
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
+                    mainIl.Append(mainIl.Create(interceptKey));
                     mainIl.Append(mainIl.Create(OpCodes.Call, readKey));
                     mainIl.Append(mainIl.Create(OpCodes.Stloc_2));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloca_S, (byte) 2));
@@ -200,7 +209,7 @@ public static class BfCompiler {
                 }
             }
         }
-        
+
         if (loopBodies.Count != 0 || loopHeads.Count != 0)
             throw new Exception("Unmatched '[' encountered");
 

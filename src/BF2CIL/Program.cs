@@ -48,6 +48,10 @@ internal sealed class Command : ICommand {
     [CommandOption("generate-runtime-config", 'r', Description = "Generate runtime config")]
     public bool GenerateRuntimeConfig { get; set; } = true;
 
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)]
+    [CommandOption("intercept-input", 'i', Description = "Intercept input (don't display user input when prompted)")]
+    public bool InterceptInput { get; set; } = true;
+
     ValueTask ICommand.ExecuteAsync(IConsole console) {
         if (!File.Exists(InputPath))
             throw new FileNotFoundException("Input file not found", InputPath);
@@ -61,6 +65,7 @@ internal sealed class Command : ICommand {
         var input = File.ReadAllText(InputPath);
         var options = BfCompilerOptions.CreateDefault(Name, Version);
         options.CellCount = CellCount;
+        options.InterceptInput = InterceptInput;
         var output = BfCompiler.Compile(
             input,
             options
