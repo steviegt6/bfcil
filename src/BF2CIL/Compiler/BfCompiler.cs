@@ -85,14 +85,14 @@ public static class BfCompiler {
         var loopEnds = new Stack<Instruction>();
 
         // TODO: We can optimize by omitting this var entirely when allowed.
-        var cells = new VariableDefinition(ts.Int32.MakeArrayType());
+        var cells = new VariableDefinition(ts.Byte.MakeArrayType());
         mainLocals.Add(cells);
 
         var ptr = new VariableDefinition(ts.Int32);
         mainLocals.Add(ptr);
 
         // TODO: Configurable data type?
-        // int[] cells = new int[options.CellCount];
+        // byte[] cells = new byte[options.CellCount];
         mainIl.Append(mainIl.Create(OpCodes.Ldc_I4, options.CellCount));
         mainIl.Append(mainIl.Create(OpCodes.Newarr, ts.Byte));
         mainIl.Append(mainIl.Create(OpCodes.Stloc_0));
