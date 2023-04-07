@@ -170,11 +170,11 @@ public static class BfCompiler {
                     break;
 
                 case '[': {
-                    // while (cells[ptr] != 0) {
                     var loopStart = mainIl.Create(OpCodes.Nop);
                     var loopEnd = mainIl.Create(OpCodes.Nop);
                     loopStarts.Push(loopStart);
                     loopEnds.Push(loopEnd);
+
                     // if (cells[ptr] == 0) goto loopEnd
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
@@ -188,9 +188,9 @@ public static class BfCompiler {
                     if (loopEnds.Count == 0)
                         throw new Exception("Unmatched ']' encountered");
 
-                    // }
                     var loopStart = loopStarts.Pop();
                     var loopEnd = loopEnds.Pop();
+
                     // if (cells[ptr] != 0) goto loopStart
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
