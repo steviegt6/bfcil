@@ -5,3 +5,5 @@ Samples suffixed with `.Wikipedia` can be found over at [Wikipedia](https://en.w
 Samples suffixed with `.Esolang` can be found over at [Esolang](https://esolangs.org/wiki/Brainfuck).
 
 All files are compiled with `dotnet BF2CIL.dll <file> -w`.
+
+All files are decompiled with `dotnet BF2CIL.dll <file> -w -o "<filename>-decompiled.bf"`.
