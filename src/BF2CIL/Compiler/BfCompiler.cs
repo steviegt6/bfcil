@@ -94,7 +94,7 @@ public static class BfCompiler {
         // TODO: Configurable data type?
         // int[] cells = new int[options.CellCount];
         mainIl.Append(mainIl.Create(OpCodes.Ldc_I4, options.CellCount));
-        mainIl.Append(mainIl.Create(OpCodes.Newarr, ts.Int32));
+        mainIl.Append(mainIl.Create(OpCodes.Newarr, ts.Byte));
         mainIl.Append(mainIl.Create(OpCodes.Stloc_0));
 
         // int ptr = 0;
@@ -129,32 +129,33 @@ public static class BfCompiler {
                     // cells[ptr]++;
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldelema, ts.Int32));
+                    mainIl.Append(mainIl.Create(OpCodes.Ldelema, ts.Byte));
                     mainIl.Append(mainIl.Create(OpCodes.Dup));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldind_I4));
+                    mainIl.Append(mainIl.Create(OpCodes.Ldind_U1));
                     mainIl.Append(mainIl.Create(OpCodes.Ldc_I4_1));
                     mainIl.Append(mainIl.Create(OpCodes.Add));
-                    mainIl.Append(mainIl.Create(OpCodes.Stind_I4));
+                    mainIl.Append(mainIl.Create(OpCodes.Conv_U1));
+                    mainIl.Append(mainIl.Create(OpCodes.Stind_I1));
                     break;
 
                 case '-':
                     // cells[ptr]--;
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldelema, ts.Int32));
+                    mainIl.Append(mainIl.Create(OpCodes.Ldelema, ts.Byte));
                     mainIl.Append(mainIl.Create(OpCodes.Dup));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldind_I4));
+                    mainIl.Append(mainIl.Create(OpCodes.Ldind_U1));
                     mainIl.Append(mainIl.Create(OpCodes.Ldc_I4_1));
                     mainIl.Append(mainIl.Create(OpCodes.Sub));
-                    mainIl.Append(mainIl.Create(OpCodes.Stind_I4));
+                    mainIl.Append(mainIl.Create(OpCodes.Conv_U1));
+                    mainIl.Append(mainIl.Create(OpCodes.Stind_I1));
                     break;
 
                 case '.':
                     // Console.Write((char) cells[ptr]);
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldelem_I4));
-                    mainIl.Append(mainIl.Create(OpCodes.Conv_U2));
+                    mainIl.Append(mainIl.Create(OpCodes.Ldelem_U1));
                     mainIl.Append(mainIl.Create(OpCodes.Call, write));
                     break;
 
@@ -166,7 +167,8 @@ public static class BfCompiler {
                     mainIl.Append(mainIl.Create(OpCodes.Stloc_2));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloca_S, (byte) 2));
                     mainIl.Append(mainIl.Create(OpCodes.Call, keyChar));
-                    mainIl.Append(mainIl.Create(OpCodes.Stelem_I4));
+                    mainIl.Append(mainIl.Create(OpCodes.Conv_U1));
+                    mainIl.Append(mainIl.Create(OpCodes.Stelem_I1));
                     break;
 
                 case '[': {
@@ -178,7 +180,7 @@ public static class BfCompiler {
                     // if (cells[ptr] == 0) goto loopEnd
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldelem_I4));
+                    mainIl.Append(mainIl.Create(OpCodes.Ldelem_U1));
                     mainIl.Append(mainIl.Create(OpCodes.Brfalse, loopEnd));
                     mainIl.Append(loopStart);
                     break;
@@ -194,7 +196,7 @@ public static class BfCompiler {
                     // if (cells[ptr] != 0) goto loopStart
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldelem_I4));
+                    mainIl.Append(mainIl.Create(OpCodes.Ldelem_U1));
                     mainIl.Append(mainIl.Create(OpCodes.Brtrue, loopStart));
                     mainIl.Append(loopEnd);
                     break;
