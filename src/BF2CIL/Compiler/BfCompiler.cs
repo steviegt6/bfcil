@@ -81,8 +81,8 @@ public static class BfCompiler {
         var mainIl = main.Body.GetILProcessor();
         var mainLocals = main.Body.Variables;
 
-        var loopStarts = new Stack<Instruction>();
-        var loopEnds = new Stack<Instruction>();
+        var loopHeads = new Stack<Instruction>();
+        var loopBodies = new Stack<Instruction>();
 
         // TODO: We can optimize by omitting this var entirely when allowed.
         var cells = new VariableDefinition(ts.Byte.MakeArrayType());
@@ -172,37 +172,37 @@ public static class BfCompiler {
                     break;
 
                 case '[': {
-                    var loopStart = mainIl.Create(OpCodes.Nop);
-                    var loopEnd = mainIl.Create(OpCodes.Nop);
-                    loopStarts.Push(loopStart);
-                    loopEnds.Push(loopEnd);
+                    var loopHead = mainIl.Create(OpCodes.Nop);
+                    var loopBody = mainIl.Create(OpCodes.Nop);
+                    loopHeads.Push(loopHead);
+                    loopBodies.Push(loopBody);
 
-                    // if (cells[ptr] == 0) goto loopEnd
-                    mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
-                    mainIl.Append(mainIl.Create(OpCodes.Ldelem_U1));
-                    mainIl.Append(mainIl.Create(OpCodes.Brfalse, loopEnd));
-                    mainIl.Append(loopStart);
+                    // goto loopHead; loopBody: ...;
+                    mainIl.Append(mainIl.Create(OpCodes.Br, loopHead));
+                    mainIl.Append(loopBody);
                     break;
                 }
 
                 case ']': {
-                    if (loopEnds.Count == 0)
+                    if (loopHeads.Count == 0)
                         throw new Exception("Unmatched ']' encountered");
 
-                    var loopStart = loopStarts.Pop();
-                    var loopEnd = loopEnds.Pop();
+                    var loopHead = loopHeads.Pop();
+                    var loopBody = loopBodies.Pop();
 
-                    // if (cells[ptr] != 0) goto loopStart
+                    // loopHead: if (cells[ptr] != 0) goto loopBody;
+                    mainIl.Append(loopHead);
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_0));
                     mainIl.Append(mainIl.Create(OpCodes.Ldloc_1));
                     mainIl.Append(mainIl.Create(OpCodes.Ldelem_U1));
-                    mainIl.Append(mainIl.Create(OpCodes.Brtrue, loopStart));
-                    mainIl.Append(loopEnd);
+                    mainIl.Append(mainIl.Create(OpCodes.Brtrue, loopBody));
                     break;
                 }
             }
         }
+        
+        if (loopBodies.Count != 0 || loopHeads.Count != 0)
+            throw new Exception("Unmatched '[' encountered");
 
         mainIl.Append(mainIl.Create(OpCodes.Ret));
 
